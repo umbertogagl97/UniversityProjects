@@ -1,0 +1,27 @@
+result = client['final_project']['links'].aggregate([
+    {
+        '$addFields': {
+            'link': {
+                '$concat': [
+                    'https://www.themoviedb.org/movie/', {
+                        '$convert': {
+                            'input': '$tmdbId', 
+                            'to': 'string'
+                        }
+                    }
+                ]
+            }
+        }
+    }, {
+        '$project': {
+            'movieId': 1, 
+            'link': 1
+        }
+    }, {
+        '$merge': {
+            'into': 'movieId_links', 
+            'on': '_id'
+        }
+    }
+])
+
