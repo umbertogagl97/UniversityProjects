@@ -1,0 +1,48 @@
+result = client['final_project']['movies'].aggregate([
+    {
+        '$set': {
+            'title': {
+                '$split': [
+                    '$title', '(19'
+                ]
+            }
+        }
+    }, {
+        '$set': {
+            'title': {
+                '$arrayElemAt': [
+                    '$title', 0
+                ]
+            }, 
+            'anno': {
+                '$arrayElemAt': [
+                    '$title', 1
+                ]
+            }
+        }
+    }, {
+        '$set': {
+            'anno': {
+                '$split': [
+                    '$anno', ')'
+                ]
+            }
+        }
+    }, {
+        '$set': {
+            'anno': {
+                '$arrayElemAt': [
+                    '$anno', 0
+                ]
+            }
+        }
+    }, {
+        '$project': {'movieId': 1, 'anno': 1
+        }
+    }, {
+        '$merge': {
+            'into': 'movieID_anno', 
+            'on': '_id'
+        }
+    }
+])
